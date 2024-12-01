@@ -1,11 +1,17 @@
 import { MongoClient, GridFSBucket } from 'mongodb';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { ObjectId } from 'mongodb';
+
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const DATABASE_NAME = process.env.DATABASE_NAME;
 
-async function handler(req: any, res: any) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query; // This is the filename from the URL.
-
+  
+  if (typeof id !== 'string') {
+    return res.status(400).json({ error: 'Invalid file ID' });
+  }
   if (req.method === 'GET') {
     try {
       const client = await MongoClient.connect(MONGODB_URI as string);

@@ -20,10 +20,6 @@ export default function Home() {
                     </Link>
                 </div>
             </div>
-            {/* <div className="hero-image">
-        <Image src="/images/b2.webp" alt="Cloud Illustration" width={500}
-        height={300}  />
-        </div> */}
         </div>
     );
 }

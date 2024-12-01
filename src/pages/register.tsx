@@ -1,33 +1,41 @@
-import { useState } from 'react';
+import { useState, FormEvent } from 'react'; // Import proper types
 import './styles/globals.css';
 import router from 'next/router';
 
 export default function Register() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState<string>(''); // Specify types
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault(); // FormEvent type for `e`
 
-    const res = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password }),
-    });
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      alert('Registration successful');
-    } else {
-      setError(data.error);
+      if (res.ok) {
+        alert('Registration successful');
+        router.push('/login'); // Redirect to login page after successful registration
+      } else {
+        setError(data.error || 'An error occurred');
+      }
+    } catch (fetchError) {
+      console.error('Error during registration:', fetchError);
+      setError('Failed to connect to server. Please try again later.');
     }
   };
+
   const handleGoBack = () => {
-    router.push('/'); // Go to homepage
+    router.push('/'); // Navigate to the homepage
   };
+
   return (
     <div className="register-container">
       <div className="register-card">
@@ -56,9 +64,14 @@ export default function Register() {
             className="input-field"
           />
           <button type="submit" className="submit-button">Register</button>
-          <button  className="submit-button" onClick={handleGoBack} style={{ marginTop: '10px' }}>
-        Back to Homepage
-      </button>
+          <button
+            type="button" // Change to type="button" to avoid submitting the form
+            className="submit-button"
+            onClick={handleGoBack}
+            style={{ marginTop: '10px' }}
+          >
+            Back to Homepage
+          </button>
         </form>
       </div>
     </div>

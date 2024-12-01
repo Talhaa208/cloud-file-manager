@@ -2,10 +2,17 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import './styles/globals.css';
 
+interface Filee {
+  _id: string;
+  length: number;
+  chunkSize: number;
+  uploadDate: string;
+  filename: string;
+  contentType: string;
+}
 const Dashboard = () => {
   const router = useRouter();
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
-  const [files, setFiles] = useState<any[]>([]);
+  const [files, setFiles] = useState<Filee[]>([]);
   const [fileToUpload, setFileToUpload] = useState<File | null>(null);
 
   useEffect(() => {
@@ -21,28 +28,6 @@ const Dashboard = () => {
 
     fetchFiles();
   }, []);
-
-
-  const deleteFile = async (fileId: string) => {
-    try {
-      const response = await fetch('/api/delete', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ fileId }),
-      });
-
-      if (response.ok) {
-        setFiles((prevFiles) => prevFiles.filter((file) => file._id !== fileId));
-      } else {
-        const { error } = await response.json();
-        console.error('Delete failed:', error);
-      }
-    } catch (error) {
-      console.error('Error deleting file:', error);
-    }
-  };
 
   const handleFileUpload = async () => {
     if (!fileToUpload) return;

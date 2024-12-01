@@ -1,14 +1,20 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dbConnect from '../lib/mongodb';
 import User from '../models/User';
 import * as dotenv from 'dotenv';
 
-// Load environment variables from the .env file
+// Load environment variables
 dotenv.config();
 
+const JWT_SECRET = process.env.JWT_SECRET;
 
-export default async function handler(req:any, res:any) {
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is missing');
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { email, password } = req.body;
 
@@ -17,29 +23,34 @@ export default async function handler(req:any, res:any) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    await dbConnect();
+    try {
+      await dbConnect();
 
-    // Find the user by email
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ error: 'Invalid email or password' });
+      // Find the user by email
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ error: 'Invalid email or password' });
+      }
+
+      // Compare passwords
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        return res.status(400).json({ error: 'Invalid email or password' });
+      }
+
+      // Create JWT token
+      const token = jwt.sign(
+        { userId: user._id.toString(), email: user.email },
+        JWT_SECRET as string, // Safe to use since we've validated its presence
+        { expiresIn: '1h' }
+      );
+
+      return res.status(200).json({ message: 'Login successful', token });
+    } catch (error) {
+      console.error('Error during login:', error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
-
-    // Compare passwords
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(400).json({ error: 'Invalid email or password' });
-    }
-
-    // Create JWT token
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      process.env.JWT_SECRET as string,
-      { expiresIn: '1h' }
-    );
-
-    res.status(200).json({ message: 'Login successful', token });
   } else {
-    res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 }
