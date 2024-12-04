@@ -4,7 +4,7 @@ import { MongoClient } from 'mongodb';
 const MONGODB_URI = process.env.MONGODB_URI as string;
 const DATABASE_NAME = process.env.DATABASE_NAME;
 
-if (!MONGODB_URI || !DATABASE_NAME) {
+if (!MONGODB_URI) {
   throw new Error('Missing MONGODB_URI or DATABASE_NAME environment variable');
 }
 
