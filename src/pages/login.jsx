@@ -9,7 +9,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const res = await fetch('/api/login', {
@@ -28,7 +28,7 @@ export default function Login() {
     }
   };
   const handleGoBack = () => {
-    router.push('/'); // Go to homepage
+    router.push('/'); 
   };
 
   return (

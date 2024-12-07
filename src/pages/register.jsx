@@ -1,15 +1,15 @@
-import { useState, FormEvent } from 'react'; // Import proper types
+import { useState } from 'react'; 
 import './styles/globals.css';
 import router from 'next/router';
 
 export default function Register() {
-  const [username, setUsername] = useState<string>(''); // Specify types
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [username, setUsername] = useState(''); 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault(); // FormEvent type for `e`
+  const handleSubmit = async (e) => {
+    e.preventDefault(); 
 
     try {
       const res = await fetch('/api/register', {
@@ -22,18 +22,19 @@ export default function Register() {
 
       if (res.ok) {
         alert('Registration successful');
-        router.push('/login'); // Redirect to login page after successful registration
+        console.log(data,"data");
+        router.push('/login'); 
       } else {
-        setError(data.error || 'An error occurred');
+        setError('An error occurred');
       }
     } catch (fetchError) {
-      console.error('Error during registration:', fetchError);
+      console.log('Error during registration:', fetchError);
       setError('Failed to connect to server. Please try again later.');
     }
   };
 
   const handleGoBack = () => {
-    router.push('/'); // Navigate to the homepage
+    router.push('/'); 
   };
 
   return (
@@ -65,7 +66,7 @@ export default function Register() {
           />
           <button type="submit" className="submit-button">Register</button>
           <button
-            type="button" // Change to type="button" to avoid submitting the form
+            type="button" 
             className="submit-button"
             onClick={handleGoBack}
             style={{ marginTop: '10px' }}

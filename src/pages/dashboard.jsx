@@ -2,18 +2,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import './styles/globals.css';
 
-interface Filee {
-  _id: string;
-  length: number;
-  chunkSize: number;
-  uploadDate: string;
-  filename: string;
-  contentType: string;
-}
 const Dashboard = () => {
   const router = useRouter();
-  const [files, setFiles] = useState<Filee[]>([]);
-  const [fileToUpload, setFileToUpload] = useState<File | null>(null);
+  const [files, setFiles] = useState([]);
+  const [fileToUpload, setFileToUpload] = useState(null);
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -54,7 +46,7 @@ const Dashboard = () => {
   };
 
   const handleLogout = () => {
-    router.push('/'); // Redirect to login page
+    router.push('/');
   };
 
   return (

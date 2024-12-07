@@ -1,36 +1,30 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import multer from 'multer';
 import { GridFsStorage } from 'multer-gridfs-storage';
 
-// Environment variables
 const MONGODB_URI = process.env.MONGODB_URI;
 
-// Configure GridFS storage
 const storage = new GridFsStorage({
-  url: MONGODB_URI as string,
+  url: MONGODB_URI,
   options: { useUnifiedTopology: true },
-  file: (req: any, file: Express.Multer.File) => {
+  file: (req, file) => {
     return {
-      bucketName: 'uploads', // Bucket to store files
-      filename: `${Date.now()}-${file.originalname}`, // Unique filename
+      bucketName: 'uploads', 
+      filename: `${Date.now()}-${file.originalname}`, 
     };
   },
 });
 
-// Multer upload configuration
 const upload = multer({ storage });
 
-// Disable default body parser for multipart forms
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-// Helper function to handle Multer uploads
-const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: Function) => {
+const runMiddleware = (req, res, fn) => {
   return new Promise((resolve, reject) => {
-    fn(req, res, (result: unknown) => {
+    fn(req, res, (result) => {
       if (result instanceof Error) {
         return reject(result);
       }
@@ -39,13 +33,12 @@ const runMiddleware = (req: NextApiRequest, res: NextApiResponse, fn: Function) 
   });
 };
 
-// Main API handler
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       await runMiddleware(req, res, upload.single('file'));
 
-      const file = (req as any).file; // Safely typecast to access file object
+      const file = (req).file; 
 
       if (!file) {
         return res.status(400).json({ error: 'No file uploaded' });

@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import '../styles/globals.css';
+
 
 const Navbar = () => {
   return (
