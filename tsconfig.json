@@ -2,26 +2,30 @@
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
+    "allowJs": true, // Allows JavaScript files in the project
+    "skipLibCheck": true, // Skips type checks on libraries
+    "strict": true, // Enables all strict type-checking options
+    "noEmit": true, // Prevents emitting compiled JavaScript files
+    "esModuleInterop": true, // Enables ES module interop for CommonJS modules
     "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "moduleResolution": "node",
+    "resolveJsonModule": true, // Allows importing JSON files
+    "isolatedModules": true, // Ensures each file is treated as a module
+    "jsx": "preserve", // Keeps JSX as-is for the Next.js compiler
+    "incremental": true, // Speeds up subsequent builds
+    "baseUrl": ".", // Ensures paths are resolved relative to the project root
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"] // Aliases for cleaner imports
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/pages/lib/mongodb.js", "src/pages/api/upload.jsx", "src/pages/api/register.jsx", "src/pages/api/login.jsx", "src/pages/api/files.jsx", "src/pages/api/files/[id].jsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts", // Type definitions for Next.js environment
+    "**/*.ts", // Include TypeScript files
+    "**/*.tsx", // Include TSX files
+    "**/*.js", // Include JavaScript files
+    "**/*.jsx", // Include JSX files
+    ".next/types/**/*.ts", // Next.js internal types
+    "src/**/*" // Include all files in the `src` directory
+  ],
+  "exclude": ["node_modules"] // Exclude `node_modules` from the TypeScript compiler
 }

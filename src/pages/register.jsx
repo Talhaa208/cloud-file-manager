@@ -1,5 +1,4 @@
 import { useState } from 'react'; 
-import './styles/globals.css';
 import router from 'next/router';
 
 export default function Register() {
